@@ -2,6 +2,15 @@
 
 module Types
   class MutationType < Types::BaseObject
+    field :add_task, Types::TaskType, null: true do
+      description "Add a new task"
+    end
+
+    field :delete_task, Types::TaskType, null: true do
+      description "Delete an existing task"
+      argument :id, ID
+    end
+
     field :complete_task, Types::TaskType, null: true do
       description "Mark a task as complete"
       argument :id, ID
@@ -12,6 +21,15 @@ module Types
       description "Update a task's label"
       argument :id, ID
       argument :label, String
+    end
+
+    def add_task
+      ::Task.create
+    end
+
+    def delete_task(id:)
+      # TODO how should we be handling invalid IDs?
+      ::Task.destroy(id)
     end
 
     def complete_task(id:, complete:)
